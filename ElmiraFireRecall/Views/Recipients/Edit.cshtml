@@ -1,0 +1,67 @@
+﻿@model ElmiraFireRecall.Models.FireRecipient
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>FireRecipient</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label">First Name</label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label">Last Name</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label">Email Address</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PhoneProviderId" class="control-label">Phone Provider</label>
+                <select asp-for="PhoneProviderId" class="form-control" asp-items="ViewBag.PhoneProviderId"></select>
+            </div>
+
+
+            <h3>Group Enrollment</h3>
+            @foreach (var group in (IEnumerable<ElmiraFireRecall.Controllers.AssignedGroupsDTO>
+            )ViewData["Groups"])
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="@group.GroupId" name="selectedGroups" id="group-@group.GroupId" @((group.IsMember) ? "checked" : "")>
+                    <label class="form-check-label" for="group-@group.GroupId">
+                        @group.Title
+                    </label>
+                </div>
+            }
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

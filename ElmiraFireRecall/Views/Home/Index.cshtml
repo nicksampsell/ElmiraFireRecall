@@ -1,0 +1,103 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div>
+    
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#testAlert">Recall System Test</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#fireRecall">Fire Recall Emergency</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#emo">EMO</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#misc">Misc.</a>
+        </li>
+    </ul>
+
+    <div id="parentContainer" class="mt-2">
+        <div id="testAlert" class="collapse show p-3" data-bs-parent="#parentContainer">
+            <form>
+            <div class="mb-3">
+                
+                <label for="testAlertMessage" class="form-label">Additional Message</label>
+                <textarea class="form-control" id="testAlertMessage" name="message" placeholder="Enter an additional message here." rows="10"></textarea>
+            </div>
+
+                <div class="mb-3 text-end">
+                    <div class="d-grid">
+                        <input type="submit" class="btn btn-lg btn-primary" value="Send the Test Message" />
+                    </div>
+                </div>
+        </form>
+        </div>
+        <div id="fireRecall" class="collapse alert-danger p-3" data-bs-parent="#parentContainer">
+         <form>
+            <div class="mb-3">
+                    <label for="fireRecallMessage" class="form-label">Additional Message</label>
+                    <textarea class="form-control" id="fireRecallMessage" name="message" placeholder="Enter an additional message here." rows="10"></textarea>
+            </div>
+                <div class="mb-3 text-end">
+                    <div class="d-grid">
+                        <input type="submit" class="btn btn-lg btn-danger" />
+                    </div>
+                </div>
+         </form>
+        </div>
+        <div id="emo" class="collapse p-3" data-bs-parent="#parentContainer">
+            <form>
+                <div class="mb-3">
+                    <label for="emoTo" class="form-label">To:</label>
+                    <select class="form-select" id="emoTo" name="to"></select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="emoSubject" class="form-label">Subject:</label>
+                    <input type="text" class="form-control" id="emoSubject" name="subject" placeholder="Message Subject (Optional)"></input>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fireRecallMessage" class="form-label">Additional Message</label>
+                    <textarea class="form-control" id="fireRecallMessage" name="message" placeholder="Enter an additional message here." rows="10"></textarea>
+                </div>
+                <div class="mb-3 text-end">
+                    <div class="d-grid">
+                        <input type="submit" class="btn btn-lg btn-primary" value="Send Message" />
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="misc" class="collapse p-3" data-bs-parent="#parentContainer">
+            <form>
+                <div class="mb-3">
+                    <label for="emoTo" class="form-label">To:</label>
+                    <select class="form-select" id="emoTo" name="to"></select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="emoSubject" class="form-label">Subject:</label>
+                    <input type="text" class="form-control" id="emoSubject" name="subject" placeholder="Message Subject (Optional)"></input>
+                </div>
+
+                <div class="mb-3">
+                    <label for="fireRecallMessage" class="form-label">Additional Message</label>
+                    <textarea class="form-control" id="fireRecallMessage" name="message" placeholder="Enter an additional message here." rows="10"></textarea>
+                </div>
+                <div class="mb-3 text-end">
+                    <div class="d-grid">
+                        <input type="submit" class="btn btn-lg btn-primary" value="Send Message" />
+                    </div>
+                </div>
+            </form>
+    </div>
+    </div>
+
+
+</div>
+<script>
+
+</script>
