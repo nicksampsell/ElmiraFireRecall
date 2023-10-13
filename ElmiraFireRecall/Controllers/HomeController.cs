@@ -1,9 +1,11 @@
 ﻿using ElmiraFireRecall.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace ElmiraFireRecall.Controllers
 {
+    
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -13,6 +15,7 @@ namespace ElmiraFireRecall.Controllers
             _logger = logger;
         }
 
+        [Authorize(Policy = "AllUsers")]
         public IActionResult Index()
         {
             return View();

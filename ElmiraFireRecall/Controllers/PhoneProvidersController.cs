@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ElmiraFireRecall.Data;
 using ElmiraFireRecall.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElmiraFireRecall.Controllers
 {
+    [Authorize(Policy = "Admin")]
     public class PhoneProvidersController : Controller
     {
         private readonly FireDBContext _context;

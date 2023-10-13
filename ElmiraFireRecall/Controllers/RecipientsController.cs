@@ -9,9 +9,11 @@ using ElmiraFireRecall.Data;
 using ElmiraFireRecall.Models;
 using System.Collections;
 using NuGet.Packaging;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElmiraFireRecall.Controllers
 {
+    [Authorize(Policy = "Admin")]
     public class RecipientsController : Controller
     {
         private readonly FireDBContext _context;

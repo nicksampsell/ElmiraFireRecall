@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ElmiraFireRecall.Data;
 using ElmiraFireRecall.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ElmiraFireRecall.Controllers
 {
+    [Authorize(Policy = "Admin")]
     public class UsersController : Controller
     {
         private readonly FireDBContext _context;
@@ -56,7 +58,7 @@ namespace ElmiraFireRecall.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,FirstName,LastName,Email,IsAdmin")] User user)
+        public async Task<IActionResult> Create([Bind("Id,UserId,FirstName,LastName,Email,UserRole")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +90,7 @@ namespace ElmiraFireRecall.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,FirstName,LastName,Email,IsAdmin")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,FirstName,LastName,Email,UserRole")] User user)
         {
             if (id != user.Id)
             {

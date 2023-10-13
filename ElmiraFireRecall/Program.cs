@@ -1,6 +1,7 @@
 using ElmiraFireRecall;
 using ElmiraFireRecall.Data;
 using ElmiraFireRecall.Models;
+using ElmiraFireRecall.Services;
 using ElmiraFireRecall.Settings;
 using MailKit;
 using Microsoft.AspNetCore.Authentication;
@@ -15,8 +16,6 @@ builder.Services.AddDbContext<FireDBContext>(options => options.UseSqlServer(bui
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
-   .AddNegotiate();
 
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
    .AddNegotiate();
@@ -25,16 +24,19 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AllUsers", policy => policy.RequireClaim("UserRole"));
     options.AddPolicy("Supervisor", policy => policy.RequireClaim("UserRole", UserRole.Supervisor.ToString(), UserRole.Administrator.ToString(), UserRole.Developer.ToString()));
-    options.AddPolicy("Administrator", policy => policy.RequireClaim("UserRole", UserRole.Administrator.ToString(), UserRole.Developer.ToString()));
+    options.AddPolicy("Admin", policy => policy.RequireClaim("UserRole", UserRole.Administrator.ToString(), UserRole.Developer.ToString()));
     options.AddPolicy("Developer", policy => policy.RequireClaim("UserRole", UserRole.Developer.ToString()));
     options.FallbackPolicy = options.DefaultPolicy;
 });
 
 builder.Services.AddTransient<IClaimsTransformation, CCClaimsTransformation>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
-builder.Services.AddTransient<IMailService, MailService>();
+builder.Services.AddTransient<ElmiraFireRecall.Services.IMailService, ElmiraFireRecall.Services.MailService>();
 
 builder.Services.AddRazorPages();
+
+builder.Services.AddHostedService<LongRunningService>();
+builder.Services.AddSingleton<BackgroundWorkerQueue>();
 
 var app = builder.Build();
 
@@ -45,11 +47,13 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseStatusCodePagesWithReExecute("/error/{0}");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
