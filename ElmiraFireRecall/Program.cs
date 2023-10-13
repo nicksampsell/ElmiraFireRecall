@@ -1,4 +1,9 @@
+using ElmiraFireRecall;
 using ElmiraFireRecall.Data;
+using ElmiraFireRecall.Models;
+using ElmiraFireRecall.Settings;
+using MailKit;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Negotiate;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +18,22 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
    .AddNegotiate();
 
+builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
+   .AddNegotiate();
+
 builder.Services.AddAuthorization(options =>
 {
-    // By default, all incoming requests will be authorized according to the default policy.
+    options.AddPolicy("AllUsers", policy => policy.RequireClaim("UserRole"));
+    options.AddPolicy("Supervisor", policy => policy.RequireClaim("UserRole", UserRole.Supervisor.ToString(), UserRole.Administrator.ToString(), UserRole.Developer.ToString()));
+    options.AddPolicy("Administrator", policy => policy.RequireClaim("UserRole", UserRole.Administrator.ToString(), UserRole.Developer.ToString()));
+    options.AddPolicy("Developer", policy => policy.RequireClaim("UserRole", UserRole.Developer.ToString()));
     options.FallbackPolicy = options.DefaultPolicy;
 });
+
+builder.Services.AddTransient<IClaimsTransformation, CCClaimsTransformation>();
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+builder.Services.AddTransient<IMailService, MailService>();
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="EntityFrameworkCore.DataEncryption" Version="4.0.1" />
     <PackageReference Include="EntityFrameworkCore.EncryptColumn" Version="6.0.8" />
+    <PackageReference Include="MailKit" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Negotiate" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.12" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.12" />
@@ -18,6 +19,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.9" />
+    <PackageReference Include="MimeKit" Version="4.2.0" />
   </ItemGroup>
 
 </Project>

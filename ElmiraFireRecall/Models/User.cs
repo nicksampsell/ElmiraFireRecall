@@ -11,5 +11,14 @@ namespace ElmiraFireRecall.Models
         public string LastName { get; set; }
         public string Email { get; set; }
         public bool IsAdmin { get; set; } = false;
+        public UserRole UserRole { get; set; } = UserRole.User;
+    }
+
+    public enum UserRole
+    {
+        User,
+        Supervisor,
+        Administrator,
+        Developer
     }
 }
