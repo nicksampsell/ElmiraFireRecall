@@ -1,14 +1,12 @@
 ﻿@model IEnumerable<ElmiraFireRecall.Models.MessageType>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Manage Message Types";
+    ViewData["IsIndex"] = true;
 }
 
-<h1>Index</h1>
+<partial name="_PageHeaderPartial" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>

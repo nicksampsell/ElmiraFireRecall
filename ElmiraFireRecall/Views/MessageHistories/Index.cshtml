@@ -1,33 +1,27 @@
 ﻿@model IEnumerable<ElmiraFireRecall.Models.MessageHistory>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Message History";
+    ViewData["IsIndex"] = true;
+    ViewData["HideButtons"] = true;
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<partial name="_PageHeaderPartial" />
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MessageType)
+                Message Type
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Subject)
+                Subject
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Message)
+                Message
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Created)
+                Send Date
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Updated)
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -45,13 +39,6 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Created)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Updated)
-            </td>
-                <td class="text-end">
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
-                </td>
         </tr>
 }
     </tbody>

@@ -1,14 +1,11 @@
 ﻿@model IEnumerable<ElmiraFireRecall.Models.PhoneProvider>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Manage Phone Providers";
+    ViewData["IsIndex"] = true;
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<partial name="_PageHeaderPartial" />
 <table class="table">
     <thead>
         <tr>

@@ -2,20 +2,22 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div>
-    
+<h1 class="mb-3">Send Message</h1>
+
+<div class="mt-3">
+
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#testAlert">Recall System Test</a>
+            <a class="nav-link active" id="testTab" href="#" data-bs-toggle="collapse" data-bs-target="#testAlert">Recall System Test</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#fireRecall">Fire Recall Emergency</a>
+            <a class="nav-link" id="emergencyTab" href="#" data-bs-toggle="collapse" data-bs-target="#fireRecall">Fire Recall Emergency</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#" data-bs-toggle="collapse" data-bs-target="#emo">EMO</a>
+            <a class="nav-link" id="emoTab" href="#" data-bs-toggle="collapse" data-bs-target="#emo">EMO</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-bs-toggle="collapse" data-bs-target="#misc">Misc.</a>
+            <a class="nav-link" id="miscTab" href="#" data-bs-toggle="collapse" data-bs-target="#misc">Misc.</a>
         </li>
     </ul>
 
@@ -43,7 +45,7 @@
             </div>
                 <div class="mb-3 text-end">
                     <div class="d-grid">
-                        <input type="submit" class="btn btn-lg btn-danger" />
+                        <input type="submit" class="btn btn-lg btn-danger" value="Send Message"/>
                     </div>
                 </div>
          </form>
@@ -99,5 +101,51 @@
 
 </div>
 <script>
+    var currentTab = '';
+    const myCollapsible = document.getElementById('parentContainer')
+
+
+
+    myCollapsible.addEventListener('show.bs.collapse', event => {
+        currentTab = event.target.id;
+        const testTab = document.getElementById('testTab')
+        const emergencyTab = document.getElementById('emergencyTab')
+        const emoTab = document.getElementById('emoTab')
+        const miscTab = document.getElementById('miscTab');
+
+        switch (event.target.id) {
+            case 'testAlert':
+                testTab.classList.add('active');
+                emergencyTab.classList.remove('active');
+                emoTab.classList.remove('active');
+                miscTab.classList.remove('active');
+                break;
+            case 'fireRecall':
+                testTab.classList.remove('active');
+                emergencyTab.classList.add('active');
+                emoTab.classList.remove('active');
+                miscTab.classList.remove('active');
+                
+                break;
+            case 'emo':
+                testTab.classList.remove('active');
+                emergencyTab.classList.remove('active');
+                emoTab.classList.add('active');
+                miscTab.classList.remove('active');
+                break;
+            case 'misc':
+                testTab.classList.remove('active');
+                emergencyTab.classList.remove('active');
+                emoTab.classList.remove('active');
+                miscTab.classList.add('active');
+            break;
+        }    
+        
+        
+        
+
+
+    })
+
 
 </script>
