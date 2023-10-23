@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace ElmiraFireRecall.Helpers
 {
@@ -13,6 +14,12 @@ namespace ElmiraFireRecall.Helpers
             var acceptedActions = (actions ?? currentAction ?? "").Split(',');
 
             return acceptedControllers.Contains(currentController) && acceptedActions.Contains(currentAction) ? cssClass : "";
+        }
+
+        public static string? LastUsedTab(this IHtmlHelper htmlHelper, string? tabName, string? cssClass = "active")
+        {
+            return ((string)htmlHelper.ViewContext.TempData["TabName"] == tabName) ? cssClass : "";
+
         }
     }
 }

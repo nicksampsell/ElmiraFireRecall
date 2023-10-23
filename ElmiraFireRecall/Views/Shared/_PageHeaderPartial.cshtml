@@ -18,14 +18,14 @@
     </div>
     <div class="row">
         <div class="col">
-            @if(TempData.ContainsKey("Error"))
+            @if (TempData.ContainsKey("Error") || TempData.ContainsKey("error"))
             {
                 <div class="alert alert-danger" role="alert">
                     @TempData["Error"]?.ToString()
                 </div>
             }
 
-            @if (TempData.ContainsKey("Success"))
+            @if (TempData.ContainsKey("Success") || TempData.ContainsKey("success"))
             {
                 <div class="alert alert-success" role="alert">
                     @TempData["Success"]?.ToString()

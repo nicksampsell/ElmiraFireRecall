@@ -10,6 +10,7 @@ using ElmiraFireRecall.Models;
 using System.Collections;
 using NuGet.Packaging;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ElmiraFireRecall.Controllers
 {
@@ -24,9 +25,32 @@ namespace ElmiraFireRecall.Controllers
         }
 
         // GET: Recipients
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchFor="", string searchBy="")
         {
-            var fireDBContext = _context.Recipients.Include(x => x.FireGroups).Include(f => f.PhoneProvider);
+            var fireDBContext = _context.Recipients.Include(x => x.FireGroups).Include(f => f.PhoneProvider).AsQueryable();
+
+            if(!String.IsNullOrEmpty(searchFor))
+            {
+                if(searchBy == "name")
+                {
+                    fireDBContext = fireDBContext.Where(x => x.FirstName.Contains(searchFor) || x.LastName.Contains(searchFor));
+                }
+                else if(searchBy == "phone")
+                {
+                    fireDBContext = fireDBContext.Where(x => x.PhoneNumber.Contains(searchFor));
+                }
+                else if(searchBy == "group")
+                {
+                    fireDBContext = fireDBContext.Where(x => x.FireGroups.Any(y => y.Title.Contains(searchFor)));
+                }
+                else
+                {
+                    fireDBContext = fireDBContext.Where(x => x.FirstName.Contains(searchFor) || x.LastName.Contains(searchFor) || x.PhoneNumber.Contains(searchFor) || x.FireGroups.Any(y => y.Title.Contains(searchFor)));
+                }
+            }
+
+            ViewBag.SearchFor = searchFor;
+            ViewBag.SearchBy = searchBy;
             return View(await fireDBContext.ToListAsync());
         }
 
@@ -79,6 +103,7 @@ namespace ElmiraFireRecall.Controllers
                 _context.Add(fireRecipient);
 
                 await _context.SaveChangesAsync();
+                TempData["success"] = "The recipient has been added.";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PhoneProviderId"] = new SelectList(_context.PhoneProviders, "Id", "Name", fireRecipient.PhoneProviderId);
@@ -136,6 +161,7 @@ namespace ElmiraFireRecall.Controllers
                         throw;
                     }
                 }
+                TempData["success"] = "Your changes have been saved.";
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PhoneProviderId"] = new SelectList(_context.PhoneProviders, "Id", "Name", fireRecipient.PhoneProviderId);
@@ -178,6 +204,7 @@ namespace ElmiraFireRecall.Controllers
             }
             
             await _context.SaveChangesAsync();
+            TempData["success"] = "The recipient has been deleted.";
             return RedirectToAction(nameof(Index));
         }
 

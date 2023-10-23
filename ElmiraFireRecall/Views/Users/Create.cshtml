@@ -1,34 +1,32 @@
 ﻿@model ElmiraFireRecall.Models.User
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create User";
 }
 
-<h1>Create</h1>
-
-<h4>User</h4>
-<hr />
+<partial name="_PageHeaderPartial" />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
+                <label asp-for="UserId" class="control-label">Network UserID</label>
+                <select asp-for="UserId" class="form-control"></select>
+                <div id="IdentityHelp" class="form-text mt-0 pt-0 mb-3"><small>(Start typing the person's name or network username and a list will appear.)</small></div>
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FirstName" class="control-label"></label>
+                <label asp-for="FirstName" class="control-label">First Name</label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="LastName" class="control-label"></label>
+                <label asp-for="LastName" class="control-label">Last Name</label>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
+                <label asp-for="Email" class="control-label">E-Mail Address</label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
@@ -39,6 +37,21 @@
                 </select>
                 <span asp-validation-for="UserRole" class="text-danger"></span>
             </div>
+
+            <div class="col-md-10 mt-3">
+                <div class="card">
+                    <div class="card-header">User Roles</div>
+                    <div class="card-body pb-0 pt-1" style="font-size: .8em;">
+                        <dl>
+                            <dt>User</dt>
+                            <dd>Can Send Messages</dd>
+                            <dt>Administrator</dt>
+                            <dd>Can Send Messages, Manage Recipients and Groups, Manage Phone Providers/Provider Text Message Extensions, View Message History, Create and Manage Users.</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -46,10 +59,72 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#UserId').select2({
+                ajax: {
+                    selectionCssClass: "select2--small",
+                    dropdownCssClass: "select2--small",
+                    url: '/Users/AD/Filter',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        var query = {
+                            search: params.term
+                        }
+
+                        return query;
+                    },
+                    processResults: function (data) {
+                        data.results = $.map(data.results, function (res) {
+                            res.id = res.loginName.replace('\\\\', '\\');
+                            res.text = res.firstName + ' ' + res.lastName;
+                            return res;
+                        });
+                        return {
+                            results: data.results
+                        };
+                    },
+                },
+                placeholder: "Search for a user (by first or last name)",
+                minimumInputLength: 2,
+                templateSelection: formatSelection,
+                templateResult: formatResult,
+                theme: "bootstrap-5"
+            }).on('select2:select', function (e) {
+                var data = e.params.data;
+
+                $('#FirstName').val(data.firstName);
+                $('#LastName').val(data.lastName);
+                $('#Email').val(data.email);
+            });
+        });
+
+        function formatSelection(sel = null) {
+            if (sel == null || sel == undefined || sel == "" ||
+                sel.username == undefined) {
+                return 'Search for a user (by first or last name)';
+            }
+
+            if (sel.loading) {
+                return sel.text;
+            }
+
+            console.log(sel);
+            return sel.firstName + ' ' + sel.lastName + ' (' + sel.username + ')';
+        }
+
+        function formatResult(sel) {
+
+            if (sel.loading) {
+                return sel.text;
+            }
+            return sel.firstName + ' ' + sel.lastName + ' (' + sel.username + ')';
+        }
+    </script>
 }

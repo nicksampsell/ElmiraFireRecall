@@ -23,9 +23,7 @@ builder.Services.AddAuthentication(NegotiateDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AllUsers", policy => policy.RequireClaim("UserRole"));
-    options.AddPolicy("Supervisor", policy => policy.RequireClaim("UserRole", UserRole.Supervisor.ToString(), UserRole.Administrator.ToString(), UserRole.Developer.ToString()));
-    options.AddPolicy("Admin", policy => policy.RequireClaim("UserRole", UserRole.Administrator.ToString(), UserRole.Developer.ToString()));
-    options.AddPolicy("Developer", policy => policy.RequireClaim("UserRole", UserRole.Developer.ToString()));
+    options.AddPolicy("Admin", policy => policy.RequireClaim("UserRole", UserRole.Administrator.ToString()));
     options.FallbackPolicy = options.DefaultPolicy;
 });
 

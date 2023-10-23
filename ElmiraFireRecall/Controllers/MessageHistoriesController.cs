@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ElmiraFireRecall.Data;
 using ElmiraFireRecall.Models;
 using Microsoft.AspNetCore.Authorization;
+using Pagination.EntityFrameworkCore.Extensions;
 
 namespace ElmiraFireRecall.Controllers
 {
@@ -22,145 +23,15 @@ namespace ElmiraFireRecall.Controllers
         }
 
         // GET: MessageHistories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1, int limit = 250)
         {
-            var fireDBContext = _context.MessageHistory.Include(m => m.MessageType);
-            return View(await fireDBContext.ToListAsync());
+            List<MessageHistory> messageHistory = await _context.MessageHistory.Include(u => u.User).Include(m => m.MessageType).OrderByDescending(x => x.Created).Skip((page - 1)).Take(limit).ToListAsync();
+            int totalItems = await _context.MessageHistory.Include(u => u.User).Include(m => m.MessageType).CountAsync();
+            ViewBag.Limit = limit;
+            return View(new Pagination<MessageHistory>(messageHistory, totalItems, page, limit));
         }
 
-        // GET: MessageHistories/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.MessageHistory == null)
-            {
-                return NotFound();
-            }
 
-            var messageHistory = await _context.MessageHistory
-                .Include(m => m.MessageType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (messageHistory == null)
-            {
-                return NotFound();
-            }
-
-            return View(messageHistory);
-        }
-
-        // GET: MessageHistories/Create
-        public IActionResult Create()
-        {
-            ViewData["MessageTypeId"] = new SelectList(_context.MessageTypes, "Id", "Id");
-            return View();
-        }
-
-        // POST: MessageHistories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,MessageTypeId,Subject,Message")] MessageHistory messageHistory)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(messageHistory);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["MessageTypeId"] = new SelectList(_context.MessageTypes, "Id", "Id", messageHistory.MessageTypeId);
-            return View(messageHistory);
-        }
-
-        // GET: MessageHistories/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.MessageHistory == null)
-            {
-                return NotFound();
-            }
-
-            var messageHistory = await _context.MessageHistory.FindAsync(id);
-            if (messageHistory == null)
-            {
-                return NotFound();
-            }
-            ViewData["MessageTypeId"] = new SelectList(_context.MessageTypes, "Id", "Id", messageHistory.MessageTypeId);
-            return View(messageHistory);
-        }
-
-        // POST: MessageHistories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,MessageTypeId,Subject,Message")] MessageHistory messageHistory)
-        {
-            if (id != messageHistory.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(messageHistory);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MessageHistoryExists(messageHistory.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["MessageTypeId"] = new SelectList(_context.MessageTypes, "Id", "Id", messageHistory.MessageTypeId);
-            return View(messageHistory);
-        }
-
-        // GET: MessageHistories/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.MessageHistory == null)
-            {
-                return NotFound();
-            }
-
-            var messageHistory = await _context.MessageHistory
-                .Include(m => m.MessageType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (messageHistory == null)
-            {
-                return NotFound();
-            }
-
-            return View(messageHistory);
-        }
-
-        // POST: MessageHistories/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.MessageHistory == null)
-            {
-                return Problem("Entity set 'FireDBContext.MessageHistory'  is null.");
-            }
-            var messageHistory = await _context.MessageHistory.FindAsync(id);
-            if (messageHistory != null)
-            {
-                _context.MessageHistory.Remove(messageHistory);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
         private bool MessageHistoryExists(int id)
         {

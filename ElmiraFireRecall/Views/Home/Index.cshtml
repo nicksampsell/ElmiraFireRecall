@@ -1,33 +1,62 @@
-﻿@{
+﻿@model ElmiraFireRecall.Controllers.SubmissionDTO;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <h1 class="mb-3">Send Message</h1>
+<div class="row">
+    <div class="col">
+        @if (TempData.ContainsKey("Error") || TempData.ContainsKey("error"))
+        {
+            <div class="alert alert-danger" role="alert">
+                @TempData["Error"]?.ToString()
+            </div>
+        }
+
+        @if (TempData.ContainsKey("Success") || TempData.ContainsKey("success"))
+        {
+            <div class="alert alert-success" role="alert">
+                @TempData["Success"]?.ToString()
+            </div>
+        }
+    </div>
+</div>
 
 <div class="mt-3">
 
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs border-bottom-0">
         <li class="nav-item">
-            <a class="nav-link active" id="testTab" href="#" data-bs-toggle="collapse" data-bs-target="#testAlert">Recall System Test</a>
+            <a class="nav-link @Html.LastUsedTab("test")" id="testTab" href="#" data-bs-toggle="collapse" data-bs-target="#testAlert">Recall System Test</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="emergencyTab" href="#" data-bs-toggle="collapse" data-bs-target="#fireRecall">Fire Recall Emergency</a>
+            <a class="nav-link @Html.LastUsedTab("fireRecall")" id="emergencyTab" href="#" data-bs-toggle="collapse" data-bs-target="#fireRecall">Fire Recall Emergency</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="emoTab" href="#" data-bs-toggle="collapse" data-bs-target="#emo">EMO</a>
+            <a class="nav-link @Html.LastUsedTab("emo")" id="emoTab" href="#" data-bs-toggle="collapse" data-bs-target="#emo">EMO</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="miscTab" href="#" data-bs-toggle="collapse" data-bs-target="#misc">Misc.</a>
+            <a class="nav-link @Html.LastUsedTab("misc")" id="miscTab" href="#" data-bs-toggle="collapse" data-bs-target="#misc">Misc.</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @Html.LastUsedTab("individual")" id="individualsTab" href="#" data-bs-toggle="collapse" data-bs-target="#individuals">Individuals</a>
         </li>
     </ul>
 
-    <div id="parentContainer" class="mt-2">
+    <div id="parentContainer" class="card rounded-top-0">
+        <div class="card-header">
+            <h2 class="h3 pb-0 mb-0" id="messageTypeTitle">Test Message</h2>
+        </div>
+        <div class="card-body">
+
+
         <div id="testAlert" class="collapse show p-3" data-bs-parent="#parentContainer">
-            <form>
+                <form asp-controller ="SendEmail" asp-action="SendEmail" asp-route-messageType="test">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-3">
                 
                 <label for="testAlertMessage" class="form-label">Additional Message</label>
-                <textarea class="form-control" id="testAlertMessage" name="message" placeholder="Enter an additional message here." rows="10"></textarea>
+                <textarea asp-for="Message" class="form-control" id="testAlertMessage" placeholder="Enter an additional message here." rows="10"></textarea>
             </div>
 
                 <div class="mb-3 text-end">
@@ -38,10 +67,10 @@
         </form>
         </div>
         <div id="fireRecall" class="collapse alert-danger p-3" data-bs-parent="#parentContainer">
-         <form>
+                <form asp-controller="SendEmail" asp-action="SendEmail" asp-route-messageType="fireRecall">
             <div class="mb-3">
                     <label for="fireRecallMessage" class="form-label">Additional Message</label>
-                    <textarea class="form-control" id="fireRecallMessage" name="message" placeholder="Enter an additional message here." rows="10"></textarea>
+                        <textarea asp-for="Message" class="form-control" id="fireRecallMessage" placeholder="Enter an additional message here." rows="10"></textarea>
             </div>
                 <div class="mb-3 text-end">
                     <div class="d-grid">
@@ -51,20 +80,16 @@
          </form>
         </div>
         <div id="emo" class="collapse p-3" data-bs-parent="#parentContainer">
-            <form>
-                <div class="mb-3">
-                    <label for="emoTo" class="form-label">To:</label>
-                    <select class="form-select" id="emoTo" name="to"></select>
-                </div>
+                <form asp-controller="SendEmail" asp-action="SendEmail" asp-route-messageType="emo">
 
                 <div class="mb-3">
                     <label for="emoSubject" class="form-label">Subject:</label>
-                    <input type="text" class="form-control" id="emoSubject" name="subject" placeholder="Message Subject (Optional)"></input>
+                        <input asp-for="Subject" type="text" class="form-control" id="emoSubject" placeholder="Message Subject (Optional)"></input>
                 </div>
 
                 <div class="mb-3">
                     <label for="fireRecallMessage" class="form-label">Additional Message</label>
-                    <textarea class="form-control" id="fireRecallMessage" name="message" placeholder="Enter an additional message here." rows="10"></textarea>
+                        <textarea asp-for="Message" class="form-control" id="fireRecallMessage" placeholder="Enter an additional message here." rows="10"></textarea>
                 </div>
                 <div class="mb-3 text-end">
                     <div class="d-grid">
@@ -74,20 +99,20 @@
             </form>
         </div>
         <div id="misc" class="collapse p-3" data-bs-parent="#parentContainer">
-            <form>
+                <form asp-controller="SendEmail" asp-action="SendEmail" asp-route-messageType="misc">
                 <div class="mb-3">
-                    <label for="emoTo" class="form-label">To:</label>
-                    <select class="form-select" id="emoTo" name="to"></select>
+                    <label for="miscTo" class="form-label">Send To:</label>
+                        <select asp-for="RecipientGroup" class="form-select" id="miscTo" asp-items="ViewBag.RecipientGroups" multiple></select>
                 </div>
 
                 <div class="mb-3">
                     <label for="emoSubject" class="form-label">Subject:</label>
-                    <input type="text" class="form-control" id="emoSubject" name="subject" placeholder="Message Subject (Optional)"></input>
+                    <input type="text" asp-for="Subject" class="form-control" id="emoSubject" placeholder="Message Subject (Optional)" />
                 </div>
 
                 <div class="mb-3">
                     <label for="fireRecallMessage" class="form-label">Additional Message</label>
-                    <textarea class="form-control" id="fireRecallMessage" name="message" placeholder="Enter an additional message here." rows="10"></textarea>
+                    <textarea class="form-control" asp-for="Message" id="fireRecallMessage" placeholder="Enter an additional message here." rows="10"></textarea>
                 </div>
                 <div class="mb-3 text-end">
                     <div class="d-grid">
@@ -95,57 +120,122 @@
                     </div>
                 </div>
             </form>
+        </div>
+            <div id="individuals" class="collapse p-3" data-bs-parent="#parentContainer">
+                <form asp-controller="SendEmail" asp-action="SendEmail" asp-route-messageType="individual">
+                    <div class="mb-3">
+                        <label for="individualTo" class="form-label">Send To:</label>
+                        <select asp-for="RecipientPerson" class="form-select" id="individualTo" asp-items="ViewBag.EMO_Users" multiple></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="individualsSubject" class="form-label">Subject:</label>
+                        <input asp-for="Subject" type="text" class="form-control" id="individualsSubject" placeholder="Message Subject (Optional)" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="individualsMessage" class="form-label">Additional Message</label>
+                        <textarea asp-for="Message" class="form-control" id="individualsMessage" placeholder="Enter an additional message here." rows="10"></textarea>
+                    </div>
+                    <div class="mb-3 text-end">
+                        <div class="d-grid">
+                            <input type="submit" class="btn btn-lg btn-primary" value="Send Message" />
+                        </div>
+                    </div>
+                </form>
+            </div>
     </div>
     </div>
 
 
 </div>
+@section Scripts {
 <script>
-    var currentTab = '';
-    const myCollapsible = document.getElementById('parentContainer')
+    const myCollapsible = document.getElementById('parentContainer');
+    const tabs = {
+        testAlert: document.getElementById('testTab'),
+        fireRecall: document.getElementById('emergencyTab'),
+        emo: document.getElementById('emoTab'),
+        misc: document.getElementById('miscTab'),
+        individuals: document.getElementById('individualsTab')
+    };
 
+    myCollapsible.addEventListener('show.bs.collapse', (event) => {
+        const targetTabId = event.target.id;
+        const cardTitle = document.getElementById('messageTypeTitle');
+    
+        // Iterate through the tabs and update their active state
+        for (const tabId in tabs) {
+            if (tabId === targetTabId) {
+                tabs[tabId].classList.add('active');
+            } else {
+                tabs[tabId].classList.remove('active');
+            }
+        }
 
-
-    myCollapsible.addEventListener('show.bs.collapse', event => {
-        currentTab = event.target.id;
-        const testTab = document.getElementById('testTab')
-        const emergencyTab = document.getElementById('emergencyTab')
-        const emoTab = document.getElementById('emoTab')
-        const miscTab = document.getElementById('miscTab');
-
-        switch (event.target.id) {
+        switch (targetTabId) { 
             case 'testAlert':
-                testTab.classList.add('active');
-                emergencyTab.classList.remove('active');
-                emoTab.classList.remove('active');
-                miscTab.classList.remove('active');
+                cardTitle.textContent = 'Send Test Message';
                 break;
             case 'fireRecall':
-                testTab.classList.remove('active');
-                emergencyTab.classList.add('active');
-                emoTab.classList.remove('active');
-                miscTab.classList.remove('active');
-                
-                break;
-            case 'emo':
-                testTab.classList.remove('active');
-                emergencyTab.classList.remove('active');
-                emoTab.classList.add('active');
-                miscTab.classList.remove('active');
-                break;
-            case 'misc':
-                testTab.classList.remove('active');
-                emergencyTab.classList.remove('active');
-                emoTab.classList.remove('active');
-                miscTab.classList.add('active');
+                cardTitle.textContent = 'Send Fire Recall Emergency Message'
             break;
-        }    
-        
-        
-        
+            case 'emo':
+                cardTitle.textContent = 'Send EMO Message'
+            break;
+            case 'misc':
+                cardTitle.textContent = 'Send Miscellaneous Message'
+            break;
+            case 'individuals':
+                cardTitle.textContent = 'Send Message to Individuals'
+                break;
 
+        }
+    });
 
-    })
+    window.onload = (() => {
 
+        var activeExists = false;
+            for (const tabId in tabs) {
+            if (tabs[tabId].classList.contains('active'))
+            {
+                activeExists = true;
+                break;
+            }
+        }
+
+        console.log(tabs);
+        console.log(activeExists);
+        if (activeExists == false) { 
+            tabs["testAlert"].classList.add("active");
+        }
+    });
+
+    const accordions = document.querySelectorAll("#parentContainer");
+    let opening = false;
+    accordions.forEach(function (el) {
+        el.addEventListener("hide.bs.collapse", (event) => {
+            if (!opening) {
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                opening = false;
+            }
+        });
+        el.addEventListener("show.bs.collapse", (event) => {
+            opening = true;
+        });
+    });
 
 </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#miscTo, #individualTo').select2({
+                theme: "bootstrap-5",
+                placeholder: "Select one or more recipients",
+                closeOnSelect: false,
+                allowClear: true
+            });
+        });
+    </script>
+    }

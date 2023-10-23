@@ -13,6 +13,8 @@
     <link rel="shortcut icon" href="~/img/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block" />
+    <link rel="stylesheet" href="/lib/select2/css/select2.min.css" />
+    <link rel="stylesheet" href="/lib/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <script src="//unpkg.com/alpinejs" defer></script>
 
@@ -21,9 +23,9 @@
 <body>
     <div class="d-flex flex-no-wrap" id="wrapper" style="overflow-x: hidden; ">
         <div class="d-flex flex-column flex-shrink-0 p-2 text-bg-dark col-2" style="z-index: 10;" id="sidebar">
-            <a asp-controller="Tickets" asp-action="Index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <a asp-controller="Home" asp-action="Index" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                   <img src="~/img/cclogo.png" alt="Emergency Fire Recall" class="img-fluid logo"/></a>
-                  <h1 class="h3 text-center">Emergency Fire Recall</h1>
+                  <h1 class="h3 text-center">Emergency Recall</h1>
             <hr>
             @if ((await AuthorizationService.AuthorizeAsync(User, "AllUsers")).Succeeded)
             {
@@ -65,14 +67,14 @@
                                 <span>Manage Phone Providers</span>
                             </a>
                         </li>
-                        <li>
+                        @*<li>
                             <a class="nav-link text-white @Html.ActiveClass("MessageTypes") d-flex flex-row align-items-center" asp-area="" asp-controller="MessageTypes" asp-action="Index">
                                 <span class="material-symbols-rounded me-2">
                                     home_storage
                                 </span>
                                 <span>Manage Message Types</span>
                             </a>
-                        </li>
+                        </li>*@
                         <li>
                             <a class="nav-link text-white @Html.ActiveClass("MessageHistories") d-flex flex-row align-items-center" asp-area="" asp-controller="MessageHistories" asp-action="Index">
                                 <span class="material-symbols-rounded me-2">
@@ -80,6 +82,15 @@
                                 </span>
                                 <span>View Message History</span>
                                 
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link text-white @Html.ActiveClass("Users") d-flex flex-row align-items-center" asp-area="" asp-controller="Users" asp-action="Index">
+                                <span class="material-symbols-rounded me-2">
+                                    person
+                                </span>
+                                <span>Manage Users</span>
+
                             </a>
                         </li>
                     }
@@ -116,6 +127,7 @@
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/select2/js/select2.full.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

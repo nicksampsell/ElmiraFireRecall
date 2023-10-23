@@ -64,6 +64,7 @@ namespace ElmiraFireRecall.Controllers
             {
                 _context.Add(fireGroup);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "The group was created successfully.";
                 return RedirectToAction(nameof(Index));
             }
             return View(fireGroup);
@@ -115,6 +116,7 @@ namespace ElmiraFireRecall.Controllers
                         throw;
                     }
                 }
+                TempData["success"] = "Your changes have been saved.";
                 return RedirectToAction(nameof(Index));
             }
             return View(fireGroup);
@@ -154,6 +156,7 @@ namespace ElmiraFireRecall.Controllers
             }
             
             await _context.SaveChangesAsync();
+            TempData["success"] = "The group has been deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
 

@@ -64,6 +64,7 @@ namespace ElmiraFireRecall.Controllers
             {
                 _context.Add(messageType);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Your message type has been created.";
                 return RedirectToAction(nameof(Index));
             }
             return View(messageType);
@@ -115,6 +116,7 @@ namespace ElmiraFireRecall.Controllers
                         throw;
                     }
                 }
+                TempData["success"] = "Your changes have been saved.";
                 return RedirectToAction(nameof(Index));
             }
             return View(messageType);
@@ -154,6 +156,7 @@ namespace ElmiraFireRecall.Controllers
             }
             
             await _context.SaveChangesAsync();
+            TempData["success"] = "The message type has been deleted.";
             return RedirectToAction(nameof(Index));
         }
 

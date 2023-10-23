@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ElmiraFireRecall.Models.MessageHistory>
+﻿@using Pagination.EntityFrameworkCore.Extensions;
+@model Pagination<ElmiraFireRecall.Models.MessageHistory>
 
 @{
     ViewData["Title"] = "Message History";
@@ -7,39 +8,111 @@
 }
 
 <partial name="_PageHeaderPartial" />
-<table class="table">
+
+<h3 class="mb-3">Showing @((ViewBag.Limit > Model.TotalItems) ? Model.TotalItems : ViewBag.Limit) of @Model.TotalItems Messages</h3>
+<nav aria-label="Message History Pagination" class="justify-content-center">
+    <ul class="pagination justify-content-end">
+        @if (Model.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-page="@(Model.CurrentPage - 1)" asp-route-limit="@ViewBag.Limit" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        }
+        @for (int i = 0; i < Model.TotalPages; i++)
+        {
+            <li class="page-item"><a class="page-link @(((i+1) == Model.CurrentPage) ? "active" : "")" asp-route-page="@(i+1)" asp-route-limit="@ViewBag.Limit">@(i + 1)</a></li>
+        }
+
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-page="@(Model.CurrentPage + 1)" asp-route-limit="@ViewBag.Limit" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>
                 Message Type
             </th>
-            <th>
+            <th style="width: 20%;">
                 Subject
             </th>
-            <th>
+            <th style="width: 40%;">
                 Message
             </th>
-            <th>
-                Send Date
+            <th class="text-end">
+                Submitted By
             </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Results) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MessageType.Id)
+                @Html.DisplayFor(modelItem => item.MessageType.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Subject)
+                @{
+                    if(String.IsNullOrEmpty(item.Subject))
+                    {
+                        <em style="font-size: 0.8em; color: rgba(0,0,0,.5)">N/A</em>
+                    }
+                    else
+                    {
+                        @item.Subject
+                    }
+                }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Message)
+                <div style="font-size: 0.8em; border: 1px solid rgba(0,0,0,.2); padding: 5px 10px; color: #0f0f0f; background:rgba(0,0,0,0.09); height: 100%; display: block;">
+                @Html.Raw(item.Message.Replace("\n","<br />"))
+                </div>
             </td>
-            <td>
+            <td class="text-end">
+                @if(item.IsLegacy.HasValue)
+                {
+                        <p style="font-size: 0.8em;"><span>Legacy Import: </span><em>@item.LegacyUser</em></p>
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.User.FullName) @:on <br />
+                }
                 @Html.DisplayFor(modelItem => item.Created)
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<nav aria-label="Message History Pagination" class="justify-content-center">
+    <ul class="pagination justify-content-end">
+        @if (Model.CurrentPage > 1)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-page="@(Model.CurrentPage - 1)" asp-route-limit="@ViewBag.Limit" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        }
+        @for(int i=0;i<Model.TotalPages;i++)
+        {
+            <li class="page-item"><a class="page-link @(((i+1) == Model.CurrentPage) ? "active" : "")" asp-route-page="@(i+1)" asp-route-limit="@ViewBag.Limit">@(i + 1)</a></li>
+        }
+        
+        @if (Model.CurrentPage < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a class="page-link" asp-route-page="@(Model.CurrentPage + 1)" asp-route-limit="@ViewBag.Limit" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+        }
+    </ul>
+</nav>

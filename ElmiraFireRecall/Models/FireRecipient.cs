@@ -16,6 +16,8 @@ namespace ElmiraFireRecall.Models
         public List<FireGroup>? FireGroups { get; set; } = new List<FireGroup>();
         [NotMapped]
         public List<FireGroupFireRecipient> GroupLink { get; set; } = new List<FireGroupFireRecipient>();
+
+        public string FullName { get { return FirstName + " " + LastName; } }
         
 
     }

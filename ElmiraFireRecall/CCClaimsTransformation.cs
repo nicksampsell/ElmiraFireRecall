@@ -29,14 +29,8 @@ namespace ElmiraFireRecall
                 string role;
                 switch (user.UserRole)
                 {
-                    case UserRole.Developer:
-                        role = "Developer";
-                        break;
                     case UserRole.Administrator:
                         role = "Administrator";
-                        break;
-                    case UserRole.Supervisor:
-                        role = "Supervisor";
                         break;
                     default:
                         role = "User";
@@ -47,7 +41,7 @@ namespace ElmiraFireRecall
                 claims.Add(new Claim("UserId", user.Id.ToString()));
                 claims.Add(new Claim("FirstName", user.FirstName));
                 claims.Add(new Claim("LastName", user.LastName));
-                claims.Add(new Claim("Name", $"{user.FirstName} {user.LastName}"));
+                claims.Add(new Claim("FullName", $"{user.FirstName} {user.LastName}"));
                 claims.Add(new Claim("Email", user.Email));
                 claims.Add(new Claim("UserRole", user.UserRole.ToString()));
                 ci.AddClaims(claims);
